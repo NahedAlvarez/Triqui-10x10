@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Table : MonoBehaviour
 {
@@ -12,8 +13,12 @@ public class Table : MonoBehaviour
     bool turn;
     int numBlancos;
 
-    int winP1;
-    int winP2;
+    public Text Player1;
+    public Text Player2;
+
+
+    int winP1 = 0;
+    int winP2 = 0;
 
     float timerReStar = 1;
 
@@ -52,12 +57,14 @@ public class Table : MonoBehaviour
 
         if (numBlancos == 0)
         {
-
-
             CleanTable();
 
-
         }
+
+        Player1.text = " Victorias jugador 1: " + winP1;
+        Player2.text = " Victorias jugador 2: " + winP2;
+
+
 
 
 
@@ -78,7 +85,9 @@ public class Table : MonoBehaviour
                         Checker(go);
                         ExaminarArrayHoriz(x, y);
                         ExaminarArrayVert(x, y);
-                        //turn = false;
+                        ExamArrayDiagonal(x, y);
+                        ExamArrayDiagonalI(x, y);
+                        turn = false;
 
                     }
 
@@ -98,7 +107,10 @@ public class Table : MonoBehaviour
                         Checker(go);
                         ExaminarArrayHoriz(x, y);
                         ExaminarArrayVert(x, y);
-                       /// turn = true;
+                        ExamArrayDiagonal(x, y);
+                        ExamArrayDiagonalI(x, y);
+
+                        turn = true;
 
                     }
                 }
@@ -144,7 +156,7 @@ public class Table : MonoBehaviour
         int tempoX = x;
         int y1 = 0;
         int tempoY = y;
-        
+
         int vertical = 0;
 
         GameObject go = gos[x, y];
@@ -168,12 +180,11 @@ public class Table : MonoBehaviour
                 else
                 {
                     vertical = 0;
-                    continue;
                 }
             }
             else
             {
-                continue;
+                vertical = 0;
             }
         }
 
@@ -194,12 +205,12 @@ public class Table : MonoBehaviour
                 else
                 {
                     vertical = 0;
-                    continue;
+
                 }
             }
             else
             {
-                continue;
+                vertical = 0;
             }
         }
 
@@ -211,13 +222,13 @@ public class Table : MonoBehaviour
         int tempoX = x;
         int x1 = 0;
         int tempoY = y;
-       
+
         int horizontal = 0;
-       
+
 
         GameObject go = gos[x, y];
         Color colorPrimero = go.GetComponent<Renderer>().material.color;
-       
+
         for (tempoX = x; tempoX > x - 4; tempoX--)
         {
             if (tempoX >= 0 && tempoY >= 0 && tempoX < width && tempoY < height)
@@ -227,7 +238,7 @@ public class Table : MonoBehaviour
 
                 if (colorPrimero == goColor)
                 {
-                     x1 = tempoX;
+                    x1 = tempoX;
                     horizontal++;
                     Ganar(turn, horizontal);
                 }
@@ -235,12 +246,12 @@ public class Table : MonoBehaviour
                 else
                 {
                     horizontal = 0;
-                    continue;
+
                 }
             }
             else
             {
-                continue;
+                horizontal = 0;
             }
         }
 
@@ -256,39 +267,102 @@ public class Table : MonoBehaviour
                 {
                     horizontal++;
                     Ganar(turn, horizontal);
-                  
+
                 }
 
                 else
                 {
                     horizontal = 0;
-                    continue;
+
                 }
             }
             else
             {
-                continue;
+                horizontal = 0;
             }
         }
-       
-
 
     }
 
+    void ExamArrayDiagonal(int x, int y)
+    {
+        Color colorPrimero = gos[x, y].GetComponent<Renderer>().material.color;
+        int Diagonal = 0;
+
+        for (int i = -width; i < height; i++)
+        {
+            if (x+i >= 0 && y+i >= 0 && x+i < width && y+i < height)
+            {
+
+                GameObject go = gos[x + i, y + i];
+                Color goColor = go.GetComponent<Renderer>().material.color;
+
+                if (colorPrimero == goColor)
+                {
+                    Diagonal++;
+                    Ganar(turn, Diagonal);
+                }
+
+                else
+                {
+                    Diagonal = 0;
+                }
+            }
+            else
+            {
+                Diagonal = 0;
+            }
+        }
+
+    }
+
+    void ExamArrayDiagonalI(int x, int y)
+    {
+        Color colorPrimero = gos[x, y].GetComponent<Renderer>().material.color;
+        int Diagonal = 0;
+
+        for (int i = -width; i < width; i++)
+        {
+            if (x - i >= 0 && y+i >= 0 && x - i < width && y + i < height)
+            {
+                Color goColor = gos[x - i, y + i].GetComponent<Renderer>().material.color;
+
+                if (colorPrimero == goColor)
+                {
+                    Diagonal++;
+                    Ganar(turn, Diagonal);
+                }
+                else
+                {
+                    Diagonal = 0;
+                }
+            }
+
+        }
 
 
 
+    }
 
     void Ganar(bool turn, int count)
     {
-        if (count == 4)
+        if (turn  == false)
         {
-            CleanTable();
+            if (count == 4)
+            {
+                CleanTable();
+                winP1++;
+            }
+
         }
-
-
-
+        else 
+        {
+            if (count == 4)
+            {
+                CleanTable();
+                winP2++;
+            }
+        }
     }
-
 }
 

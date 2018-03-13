@@ -9,20 +9,22 @@ public class Table : MonoBehaviour
 
     int width = 10;
     int height = 10;
+
+    int numBlancos;
+
     [SerializeField]
     bool turn;
-    int numBlancos;
 
     public Text Player1;
     public Text Player2;
 
-
     int winP1 = 0;
     int winP2 = 0;
 
-    float timerReStar = 1;
-
-
+    bool powerUp1;
+    bool activador1;
+    bool powerUp2;
+    bool activador2;
 
     int x;
     int y;
@@ -41,7 +43,6 @@ public class Table : MonoBehaviour
                 go.transform.position = new Vector3(i, j, 0);
                 go.name = i.ToString() + " " + j.ToString();
                 gos[i, j] = go;
-
             }
         }
     }
@@ -58,13 +59,10 @@ public class Table : MonoBehaviour
         if (numBlancos == 0)
         {
             CleanTable();
-
         }
 
         Player1.text = " Victorias jugador 1: " + winP1;
         Player2.text = " Victorias jugador 2: " + winP2;
-
-
 
 
 
@@ -79,17 +77,25 @@ public class Table : MonoBehaviour
                 if (Input.GetMouseButtonDown(0))
                 {
                     GameObject go = gos[x, y];
-                    if (go.GetComponent<Renderer>().material.color == Color.white)
+                    if (go.GetComponent<Renderer>().material.color == Color.white  )
                     {
                         go.GetComponent<Renderer>().material.SetColor("_Color", Color.red);
                         Checker(go);
-                        ExaminarArrayHoriz(x, y);
-                        ExaminarArrayVert(x, y);
-                        ExamArrayDiagonal(x, y);
-                        ExamArrayDiagonalI(x, y);
+                        ExamArray(x, y);
                         turn = false;
-
                     }
+
+                    else if (go.GetComponent<Renderer>().material.color == Color.blue && powerUp2 == true)
+                    {
+                        go.GetComponent<Renderer>().material.SetColor("_Color", Color.red);
+                        Checker(go);
+                        ExamArray(x, y);
+                        turn = false;
+                        powerUp2 = false;
+                    }
+
+                   
+
 
                 }
             }
@@ -105,18 +111,20 @@ public class Table : MonoBehaviour
                     {
                         go.GetComponent<Renderer>().material.SetColor("_Color", Color.blue);
                         Checker(go);
-                        ExaminarArrayHoriz(x, y);
-                        ExaminarArrayVert(x, y);
-                        ExamArrayDiagonal(x, y);
-                        ExamArrayDiagonalI(x, y);
-
+                        ExamArray(x, y);
                         turn = true;
-
+                    }
+                    else if(go.GetComponent<Renderer>().material.color == Color.red && powerUp1 == true)
+                    {
+                        go.GetComponent<Renderer>().material.SetColor("_Color", Color.blue);
+                        Checker(go);
+                        ExamArray(x, y);
+                        turn = true;
+                        powerUp1 = false;
                     }
                 }
             }
         }
-
     }
 
     void CleanTable()
@@ -125,10 +133,8 @@ public class Table : MonoBehaviour
         {
             for (int _y = 0; _y < height; _y++)
             {
-
                 GameObject go = gos[_x, _y];
                 go.GetComponent<Renderer>().material.SetColor("_Color", Color.white);
-
             }
         }
         numBlancos = 100;
@@ -137,232 +143,215 @@ public class Table : MonoBehaviour
 
     void Checker(GameObject go)
     {
-        if ((go.GetComponent<Renderer>().material.color == Color.white))
+        if (go.GetComponent<Renderer>().material.color == Color.white)
         {
             numBlancos++;
         }
 
-        else
-        if (go.GetComponent<Renderer>().material.color != Color.white)
+        else if (go.GetComponent<Renderer>().material.color != Color.white)
         {
             numBlancos--;
         }
-
     }
 
 
-    void ExaminarArrayVert(int x, int y)
+    void ExamArray(int x, int y)
     {
-        int tempoX = x;
-        int y1 = 0;
-        int tempoY = y;
+        int vertical = 4;
+        int horizontal = 4;
+        int Diagonal = 4;
+        int DiagonalI = 4;
 
-        int vertical = 0;
-
-        GameObject go = gos[x, y];
-        Color colorPrimero = go.GetComponent<Renderer>().material.color;
-
-
-        for (tempoY = y; tempoY > y - 4; tempoY--)
-        {
-            if (tempoX >= 0 && tempoY >= 0 && tempoX < width && tempoY < height)
-            {
-                go = gos[tempoX, tempoY];
-                Color goColor = go.GetComponent<Renderer>().material.color;
-
-                if (colorPrimero == goColor)
-                {
-                    vertical++;
-                    Ganar(turn, vertical);
-                    y1 = tempoY;
-                }
-
-                else
-                {
-                    vertical = 0;
-                }
-            }
-            else
-            {
-                vertical = 0;
-            }
-        }
-
-        for (tempoY = y1; tempoY < y + 4; tempoY++)
-        {
-            if (tempoX >= 0 && tempoY >= 0 && tempoX < width && tempoY < height)
-            {
-                go = gos[tempoX, tempoY];
-
-                Color goColor = go.GetComponent<Renderer>().material.color;
-
-                if (colorPrimero == goColor)
-                {
-                    vertical++;
-                    Ganar(turn, vertical);
-                }
-
-                else
-                {
-                    vertical = 0;
-
-                }
-            }
-            else
-            {
-                vertical = 0;
-            }
-        }
-
-
-    }
-
-    void ExaminarArrayHoriz(int x, int y)
-    {
-        int tempoX = x;
-        int x1 = 0;
-        int tempoY = y;
-
-        int horizontal = 0;
-
-
-        GameObject go = gos[x, y];
-        Color colorPrimero = go.GetComponent<Renderer>().material.color;
-
-        for (tempoX = x; tempoX > x - 4; tempoX--)
-        {
-            if (tempoX >= 0 && tempoY >= 0 && tempoX < width && tempoY < height)
-            {
-                go = gos[tempoX, tempoY];
-                Color goColor = go.GetComponent<Renderer>().material.color;
-
-                if (colorPrimero == goColor)
-                {
-                    x1 = tempoX;
-                    horizontal++;
-                    Ganar(turn, horizontal);
-                }
-
-                else
-                {
-                    horizontal = 0;
-
-                }
-            }
-            else
-            {
-                horizontal = 0;
-            }
-        }
-
-        for (tempoX = x1; tempoX < x + 4; tempoX++)
-        {
-            if (tempoX >= 0 && tempoY >= 0 && tempoX < width && tempoY < height)
-            {
-                go = gos[tempoX, tempoY];
-
-                Color goColor = go.GetComponent<Renderer>().material.color;
-
-                if (colorPrimero == goColor)
-                {
-                    horizontal++;
-                    Ganar(turn, horizontal);
-
-                }
-
-                else
-                {
-                    horizontal = 0;
-
-                }
-            }
-            else
-            {
-                horizontal = 0;
-            }
-        }
-
-    }
-
-    void ExamArrayDiagonal(int x, int y)
-    {
         Color colorPrimero = gos[x, y].GetComponent<Renderer>().material.color;
-        int Diagonal = 0;
 
-        for (int i = -width; i < height; i++)
+        for (int i = -4; i < 4; i++)
         {
-            if (x+i >= 0 && y+i >= 0 && x+i < width && y+i < height)
+            if (x >= 0 && y + i >= 0 && x < width && y + i < height)
             {
+                Color goColor = gos[x, y + i].GetComponent<Renderer>().material.color;
 
+                if (colorPrimero == goColor)
+                {
+                
+                    vertical--;
+
+                    if (vertical == 0)
+                    {
+                        if (turn == false)
+                        {
+                            winP1++;
+                        }
+                        else if (turn == true)
+                        {
+                            winP2++;
+                        }
+
+                        if (winP1 - 2 >= winP2)
+                        {
+                            powerUp1 = true;
+                        }
+
+                        if (winP2 - 2 >= winP1)
+                        {
+                            powerUp2 = true;
+                        }
+
+                        CleanTable();
+                        break;
+                    }
+                }
+
+                else
+                {
+                    vertical = 4;
+                }
+            }
+            else
+            {
+                vertical = 4;
+            }
+
+            if (x + i >= 0 && y >= 0 && x + i < width && y < height)
+            {
+                GameObject go = gos[x + i, y];
+                Color goColor = go.GetComponent<Renderer>().material.color;
+
+                if (colorPrimero == goColor)
+                {
+                    horizontal--;
+
+                    if (horizontal == 0)
+                    {
+                        if (turn == false)
+                        {
+                            winP1++;
+                        }
+                        else if (turn == true)
+                        {
+                            winP2++;
+                        }
+
+                        if (winP1 - 2 >= winP2)
+                        {
+                            powerUp1 = true;
+                        }
+
+                        if (winP2 - 2 >= winP1)
+                        {
+                            powerUp2 = true;
+                        }
+
+                        CleanTable();
+                        break;
+                    }
+
+                }
+
+                else
+                {
+                    horizontal = 4;
+
+                }
+            }
+
+            else
+            {
+                horizontal = 4;
+            }
+
+
+            if (x + i >= 0 && y + i >= 0 && x + i < width && y + i < height)
+            {
                 GameObject go = gos[x + i, y + i];
                 Color goColor = go.GetComponent<Renderer>().material.color;
 
                 if (colorPrimero == goColor)
                 {
-                    Diagonal++;
-                    Ganar(turn, Diagonal);
+                    Diagonal--;
+
+                    if (Diagonal == 0)
+                    {
+                        if (turn == false)
+                        {
+                            winP1++;
+                        }
+                        else if (turn == true)
+                        {
+                            winP2++;
+                        }
+
+                        if (winP1 - 2 >= winP2)
+                        {
+                            powerUp1 = true;
+                        }
+
+                        if (winP2 - 2 >= winP1)
+                        {
+                            powerUp2 = true;
+                        }
+
+                        CleanTable();
+                        break;
+                    }
                 }
 
                 else
                 {
-                    Diagonal = 0;
+                    Diagonal = 4;
                 }
             }
+
             else
             {
-                Diagonal = 0;
+                Diagonal = 4;
             }
-        }
 
-    }
 
-    void ExamArrayDiagonalI(int x, int y)
-    {
-        Color colorPrimero = gos[x, y].GetComponent<Renderer>().material.color;
-        int Diagonal = 0;
-
-        for (int i = -width; i < width; i++)
-        {
-            if (x - i >= 0 && y+i >= 0 && x - i < width && y + i < height)
+            if (x - i >= 0 && y + i >= 0 && x - i < width && y + i < height)
             {
                 Color goColor = gos[x - i, y + i].GetComponent<Renderer>().material.color;
 
                 if (colorPrimero == goColor)
                 {
-                    Diagonal++;
-                    Ganar(turn, Diagonal);
+                    DiagonalI--;
+
+                    if (DiagonalI == 0)
+                    {
+                        if (turn == false)
+                        {
+                            winP1++;
+                        }
+                        else if (turn == true)
+                        {
+                            winP2++;
+                        }
+
+                        if (winP1 - 2 >= winP2)
+                        {
+                            powerUp1 = true;
+                        }
+
+                        if (winP2 - 2 >= winP1)
+                        {
+                            powerUp2 = true;
+                        }
+
+                        CleanTable();
+                        break;
+                    }
                 }
+
                 else
                 {
-                    Diagonal = 0;
+                    DiagonalI = 4;
                 }
             }
-
-        }
-
-
-
-    }
-
-    void Ganar(bool turn, int count)
-    {
-        if (turn  == false)
-        {
-            if (count == 4)
+            else
             {
-                CleanTable();
-                winP1++;
-            }
-
-        }
-        else 
-        {
-            if (count == 4)
-            {
-                CleanTable();
-                winP2++;
+                DiagonalI = 4;
             }
         }
     }
 }
+
 

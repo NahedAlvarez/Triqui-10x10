@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/cositas/1.unity
+- path: Assets/Escena/Menu.unity
   isLoaded: 1
   isActive: 1

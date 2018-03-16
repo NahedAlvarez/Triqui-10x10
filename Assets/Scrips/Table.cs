@@ -246,33 +246,40 @@ public class Table : MonoBehaviour
                         {
                             powerUp2 = true;
                         }
-
+                        //se llama al metodo limpiar el tablero 
                         CleanTable();
+                        //se  rompe el for para que no siga buscando victorias
                         break;
                     }
                 }
 
                 else
                 {
+                    //si el color es diferente entonces que el contador vuelva a ser 
                     vertical = 4;
                 }
             }
             else
             {
+                //si se sale del array entonces que el contador vuelva a ser 
                 vertical = 4;
             }
-
+            //Se crea un condicional para limitar el acceso al array 
             if (x + i >= 0 && y >= 0 && x + i < width && y < height)
             {
+                // se crea una variable de tipo GameObject que almacena el objeto qeu se toma del array 
                 GameObject go = gos[x + i, y];
+                //Se crea una variable de tipo color de la cual se toma el color del objeto almacenado 
                 Color goColor = go.GetComponent<Renderer>().material.color;
-
+                //se compara el color del objeto almacenado con el color del primer objeto que se tomo 
                 if (colorPrimero == goColor)
                 {
+                    //si es igual se le resta al contador 
                     horizontal--;
-
+                    //si el contador horizontal llega a 0
                     if (horizontal == 0)
                     {
+                        //se verifica el turno para sumar la victoria
                         if (turn == false)
                         {
                             winP1++;
@@ -281,6 +288,7 @@ public class Table : MonoBehaviour
                         {
                             winP2++;
                         }
+                        //se verifica si el jugador acumulo 2 victorias sobre las derrotas del oponente para activar su powerUp
 
                         if (winP1 - 2 >= winP2)
                         {
@@ -291,8 +299,9 @@ public class Table : MonoBehaviour
                         {
                             powerUp2 = true;
                         }
-
+                        //se limpia el tablero 
                         CleanTable();
+                        //Se rompe el ciclo para que no tenga en cuenta victorias de otro tipo
                         break;
                     }
 
@@ -300,6 +309,7 @@ public class Table : MonoBehaviour
 
                 else
                 {
+                    //si el color es diferente entonce el contador vuelve a ser 0
                     horizontal = 4;
 
                 }
@@ -307,21 +317,26 @@ public class Table : MonoBehaviour
 
             else
             {
+                //si el color es diferente entonce el contador vuelve a ser 0
                 horizontal = 4;
             }
 
-
+            //Se crea un condicional para limitar el acceso al array  
             if (x + i >= 0 && y + i >= 0 && x + i < width && y + i < height)
             {
+                //se buscan los datos de el objeto almacenado en la matriz y se almacena en un gameObject 
                 GameObject go = gos[x + i, y + i];
+                //se toma el coloor del objeto almacenado 
                 Color goColor = go.GetComponent<Renderer>().material.color;
-
+                //se compara el color 
                 if (colorPrimero == goColor)
                 {
+                    //Se le resta a diagonal 
                     Diagonal--;
-
+                    //si el condicional es igual a 0 
                     if (Diagonal == 0)
                     {
+                        //se verifica en que turno se esta para darle la victoria 
                         if (turn == false)
                         {
                             winP1++;
@@ -330,7 +345,7 @@ public class Table : MonoBehaviour
                         {
                             winP2++;
                         }
-
+                        //Se verifica si va ganando por 2 o mas victorias para activar su powerUp
                         if (winP1 - 2 >= winP2)
                         {
                             powerUp1 = true;
@@ -340,34 +355,40 @@ public class Table : MonoBehaviour
                         {
                             powerUp2 = true;
                         }
-
+                        //se limpia el tablero 
                         CleanTable();
+                        //Se rompe el for para no tener mas victorias de otras formas
                         break;
                     }
                 }
 
                 else
                 {
+                    //si es de un color diferente entonces se restablece el contador 
                     Diagonal = 4;
                 }
             }
 
             else
             {
+                //si se sale del array 
                 Diagonal = 4;
             }
 
-
+            //se crea un condicional para que no se salga del tamaño del array 
             if (x - i >= 0 && y + i >= 0 && x - i < width && y + i < height)
             {
+                //se crea una variable de tipo Color qeu almacena el color de las piezas 
                 Color goColor = gos[x - i, y + i].GetComponent<Renderer>().material.color;
-
+                //se compara con el color que se toma primero de gameObject 
                 if (colorPrimero == goColor)
                 {
+                    //si el color es igaul se le resta al contador 
                     DiagonalI--;
-
+                    //si el contador es igual a 0
                     if (DiagonalI == 0)
                     {
+                        //se verifica el turno para atribuirle la victoria al que este en este turno 
                         if (turn == false)
                         {
                             winP1++;
@@ -376,29 +397,34 @@ public class Table : MonoBehaviour
                         {
                             winP2++;
                         }
-
+                        //Se verifica la cantidad de victorias para saber si hay que dar el power UP 
                         if (winP1 - 2 >= winP2)
                         {
+                            //se activa el powerUp
                             powerUp1 = true;
                         }
 
                         if (winP2 - 2 >= winP1)
                         {
+                            //Se Activa el power Up
                             powerUp2 = true;
                         }
-
+                        //SE limpia el tablero 
                         CleanTable();
+                        //Se  sale del bucle para no generar mas victorias 
                         break;
                     }
                 }
 
                 else
                 {
+                    //se les devuelve el valor inicial al contador 
                     DiagonalI = 4;
                 }
             }
             else
             {
+                //Se le devuelve el valor inicial al contador 
                 DiagonalI = 4;
             }
         }
